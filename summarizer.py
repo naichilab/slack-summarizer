@@ -163,6 +163,7 @@ def load_messages(channel_id):
 
 result_text = []
 for channel in channels:
+    print(channel)
     if channel["id"] == "C01UWG45EQZ": # とりあえずアンパンマンのみ
         messages = load_messages(channel["id"])
         if messages != None:
