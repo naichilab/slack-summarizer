@@ -50,7 +50,7 @@ try:
     all_members = users_info['members']
     print(f"users count = {len(all_members)}")
 
-    while users_info["response_metadata"]["next_cursor"]:
+    while users_info["response_metadata"] and users_info["response_metadata"]["next_cursor"]:
         users_info = client.users_list(
             cursor=users_info["response_metadata"]["next_cursor"]
         )
@@ -78,7 +78,7 @@ try:
     all_channels = channels_info['channels']
     print(f"channels count = {len(all_channels)}")
 
-    while channels_info["response_metadata"]["next_cursor"]:
+    while channels_info["response_metadata"] and channels_info["response_metadata"]["next_cursor"]:
         channels_info = client.conversations_list(
             types="public_channel",
             exclude_archived=True,
@@ -87,10 +87,15 @@ try:
         all_channels.extend(channels_info['channels'])
         print(f"channels count = {len(all_channels)}")
 
-    channels_dict = [channel for channel in all_channels
+    channels = [channel for channel in all_channels
                 if not channel["is_archived"] and channel["is_channel"]]
-    channels_dict = sorted(channels_dict, key=lambda x: int(re.findall(
+    channels = sorted(channels, key=lambda x: int(re.findall(
         r'\d+', x["name"])[0]) if re.findall(r'\d+', x["name"]) else float('inf'))
+    
+    channels_dict = []
+    for channel in channels:
+        channels_dict.append({"id": channel['id'], "name": channel["name"]})
+
     print(channels_dict)
 except SlackApiError as e:
     print("Error : {}".format(e))
@@ -108,7 +113,7 @@ def load_messages(channel_id):
         all_messages = response['messages']
         print(f"messages count = {len(all_messages)}")
 
-        while response["response_metadata"]["next_cursor"]:
+        while response["response_metadata"] and response["response_metadata"]["next_cursor"]:
             response = client.conversations_history(
                 channel=channel_id,
                 oldest=start_time.timestamp(),
