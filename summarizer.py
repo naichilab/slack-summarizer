@@ -163,10 +163,11 @@ def load_messages(channel_id):
 
 result_text = []
 for channel in channels:
-    messages = load_messages(channel["id"])
-    if messages != None:
-        text = summarize(messages)
-        result_text.append(f"----\n<#{channel['id']}>\n{text}")
+    if channel["id"] == "C01UWG45EQZ": # とりあえずアンパンマンのみ
+        messages = load_messages(channel["id"])
+        if messages != None:
+            text = summarize(messages)
+            result_text.append(f"----\n<#{channel['id']}>\n{text}")
 
 title = (f"{yesterday.strftime('%Y-%m-%d')}のpublic channelの要約")
 
