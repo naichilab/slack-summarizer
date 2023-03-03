@@ -50,7 +50,7 @@ try:
     users = users_info['members']
     print(f"users count = {len(users)}")
 
-    while users_info["has_more"]:
+    while users_info["response_metadata"]["next_cursor"]:
         users_info = client.users_list(
             cursor=users_info["response_metadata"]["next_cursor"]
         )
