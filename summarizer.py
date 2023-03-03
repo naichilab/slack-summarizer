@@ -196,8 +196,8 @@ for channel in channels_dict:
 title = (f"{yesterday.strftime('%Y-%m-%d')}のpublic channelの要約")
 print(result_text)
 
-# response = client.chat_postMessage(
-#     channel=CHANNEL_ID,
-#     text=title+"\n\n"+"\n\n".join(result_text)
-# )
+response = client.chat_postMessage(
+    channel=CHANNEL_ID,
+    text=title+"\n\n"+"\n\n".join(result_text)
+)
 print("Message posted: ", response["ts"])
