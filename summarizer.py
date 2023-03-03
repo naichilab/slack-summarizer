@@ -59,7 +59,7 @@ try:
 
     users_dict = []
     for user in users:
-        if usere["deleted"]:
+        if user["deleted"]:
             continue
         if user["is_bot"]:
             continue
