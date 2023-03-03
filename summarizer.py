@@ -91,55 +91,44 @@ try:
                 if not channel["is_archived"] and channel["is_channel"]]
     channels_dict = sorted(channels_dict, key=lambda x: int(re.findall(
         r'\d+', x["name"])[0]) if re.findall(r'\d+', x["name"]) else float('inf'))
+    print(channels_dict)
 except SlackApiError as e:
     print("Error : {}".format(e))
     exit(1)
 
 # 指定したチャンネルの履歴を取得する
 
-
 def load_messages(channel_id):
-    result = None
     try:
-        result = client.conversations_history(
+        response = client.conversations_history(
             channel=channel_id,
             oldest=start_time.timestamp(),
             latest=end_time.timestamp()
         )
-    except SlackApiError as e:
-        if e.response['error'] == 'not_in_channel':
-            response = client.conversations_join(
-                channel=channel_id
-            )
-            if not response["ok"]:
-                raise SlackApiError("conversations_join() failed")
-            time.sleep(5)  # チャンネルにjoinした後、少し待つ
+        all_messages = response['messages']
+        print(f"messages count = {len(all_messages)}")
 
-            result = client.conversations_history(
+        while response["response_metadata"]["next_cursor"]:
+            response = client.conversations_history(
                 channel=channel_id,
                 oldest=start_time.timestamp(),
-                latest=end_time.timestamp()
+                latest=end_time.timestamp(),
+                cursor=response["response_metadata"]["next_cursor"]
             )
-        else:
-            print("Error : {}".format(e))
-            return None
+            all_messages.extend(response['messages'])
+            print(f"messages count = {len(all_messages)}")
+        
+    except SlackApiError as e:
+        print("Error : {}".format(e))
+        return None
 
-    # messages = result["messages"]
-    messages = list(filter(lambda m: "subtype" not in m, result["messages"]))
+    messages = list(filter(lambda m: "subtype" not in m, all_messages["messages"]))
 
     if len(messages) < 1:
         return None
 
     messages_text = []
 
-    while result["has_more"]:
-        result = client.conversations_history(
-            channel=channel_id,
-            oldest=start_time.timestamp(),
-            latest=end_time.timestamp(),
-            cursor=result["response_metadata"]["next_cursor"]
-        )
-        messages.extend(result["messages"])
     for message in messages[::-1]:
         if "bot_id" in message:
             continue
@@ -202,6 +191,7 @@ for channel in channels:
         result_text.append(f"----\n<#{channel['id']}>\n{text}")
 
 title = (f"{yesterday.strftime('%Y-%m-%d')}のpublic channelの要約")
+print(result_text)
 
 # response = client.chat_postMessage(
 #     channel=CHANNEL_ID,
