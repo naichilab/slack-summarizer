@@ -20,8 +20,9 @@ def summarize(text):
         model="gpt-3.5-turbo",
         temperature=0.5,
         messages=[
-            {"role": "system", "content": "チャットログのフォーマットは発言者: 本文\\nになっている。\\nは改行を表しています。これを踏まえて指示に従います"},
-            {"role": "user", "content": f"下記のチャットログを箇条書きで要約してください。。1行ずつの説明ではありません。全体として短く。\n\n{text}"}
+            {"role": "system", "content": "チャットログのフォーマットは発言者: 本文\\nになっている。\\nは改行を表しています。これを踏まえて指示に従います。"},
+            {"role": "user", "content": f"下記のチャットログを箇条書きで要約してください。会話の流れを考慮して要点のみ書き出してください。\n\n{text}"}
+            # {"role": "user", "content": f"下記のチャットログを箇条書きで要約してください。1行ずつの説明ではありません。全体として短く。\n\n{text}"}
         ]
     )
     return response["choices"][0]["message"]['content']
