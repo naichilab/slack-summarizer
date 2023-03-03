@@ -158,6 +158,7 @@ def load_messages(channel_id):
     if len(messages_text) == 0:
         return None
     else:
+        print(f"文字数={len(messages_text)}")
         return messages_text
 
 
