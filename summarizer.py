@@ -47,24 +47,23 @@ client = WebClient(token=TOKEN)
 # ユーザーIDからユーザー名に変換するために、ユーザー情報を取得する
 try:
     users_info = client.users_list()
-    users = users_info['members']
-    print(f"users count = {len(users)}")
+    all_members = users_info['members']
+    print(f"users count = {len(all_members)}")
 
     while users_info["response_metadata"]["next_cursor"]:
         users_info = client.users_list(
             cursor=users_info["response_metadata"]["next_cursor"]
         )
-        users.extend(users_info['members'])
-        print(f"users count = {len(users)}")
+        all_members.extend(users_info['members'])
+        print(f"users count = {len(all_members)}")
 
     users_dict = []
-    for user in users:
+    for user in all_members:
         if user["deleted"]:
             continue
         if user["is_bot"]:
             continue
-        users_dict.append({"id": user['id'], "real_name": user["real_name"]})
-    print(users_dict)
+        users_dict.append({"id": user['id'], "name": user["real_name"]})
 
 except SlackApiError as e:
     print("Error : {}".format(e))
@@ -76,9 +75,21 @@ try:
         types="public_channel",
         exclude_archived=True,
     )
-    channels = [channel for channel in channels_info['channels']
+    all_channels = channels_info['channels']
+    print(f"channels count = {len(all_channels)}")
+
+    while channels_info["response_metadata"]["next_cursor"]:
+        channels_info = client.conversations_list(
+            types="public_channel",
+            exclude_archived=True,
+            cursor=channels_info["response_metadata"]["next_cursor"]
+        )
+        all_channels.extend(channels_info['channels'])
+        print(f"channels count = {len(all_channels)}")
+
+    channels_dict = [channel for channel in all_channels
                 if not channel["is_archived"] and channel["is_channel"]]
-    channels = sorted(channels, key=lambda x: int(re.findall(
+    channels_dict = sorted(channels_dict, key=lambda x: int(re.findall(
         r'\d+', x["name"])[0]) if re.findall(r'\d+', x["name"]) else float('inf'))
 except SlackApiError as e:
     print("Error : {}".format(e))
@@ -137,7 +148,7 @@ def load_messages(channel_id):
         # ユーザーIDからユーザー名に変換する
         user_id = message['user']
         sender_name = None
-        for user in users:
+        for user in users_dict:
             if user['id'] == user_id:
                 sender_name = user['name']
                 break
@@ -152,7 +163,7 @@ def load_messages(channel_id):
         for match in matches:
             user_id = match[2:-1]
             user_name = None
-            for user in users:
+            for user in users_dict:
                 if user['id'] == user_id:
                     user_name = user['name']
                     break
@@ -164,7 +175,7 @@ def load_messages(channel_id):
         for match in matches:
             channel_id = match[2:-1]
             channel_name = None
-            for channel in channels:
+            for channel in channels_dict:
                 if channel['id'] == channel_id:
                     channel_name = channel['name']
                     break
