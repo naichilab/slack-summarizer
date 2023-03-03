@@ -102,6 +102,27 @@ except SlackApiError as e:
 # 指定したチャンネルの履歴を取得する
 
 def load_messages(channel_id):
+
+    # チャンネル参加
+    try:
+        result = client.conversations_history(
+            channel=channel_id,
+            oldest=start_time.timestamp(),
+            latest=end_time.timestamp()
+        )
+    except SlackApiError as e:
+        if e.response['error'] == 'not_in_channel':
+            response = client.conversations_join(
+                channel=channel_id
+            )
+            if not response["ok"]:
+                raise SlackApiError("conversations_join() failed")
+            time.sleep(5)  # チャンネルにjoinした後、少し待つ
+        else:
+            print("Error : {}".format(e))
+            return None
+
+    # 実際に取得
     try:
         response = client.conversations_history(
             channel=channel_id,
