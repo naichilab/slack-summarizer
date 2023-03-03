@@ -205,7 +205,6 @@ def load_messages(channel_id):
         return messages_text
 
 
-result_text = []
 channels_dict = [
     {"id": "C014M35N3DH", "name": "times_technθ"},
     {"id": "CE02R723B", "name": "_6_雑談"},
@@ -215,13 +214,15 @@ for channel in channels_dict:
     print(f"channel id={channel['id']} name={channel['name']} messages={len(messages)}")
     if messages != None:
         text = summarize(messages)
-        result_text.append(f"----\n<#{channel['id']}>\n{text}")
+        title = (f"{yesterday.strftime('%Y-%m-%d')} <#{channel['id']}>の要約")
 
-title = (f"{yesterday.strftime('%Y-%m-%d')}のpublic channelの要約")
-print(result_text)
+        response = client.chat_postMessage(
+            channel=CHANNEL_ID,
+            text=title+"\n\n"+text
+        )
+        print(title)
+        print(text)
+        print("Message posted: ", response["ts"])
 
-response = client.chat_postMessage(
-    channel=CHANNEL_ID,
-    text=title+"\n\n"+"\n\n".join(result_text)
-)
-print("Message posted: ", response["ts"])
+
+
