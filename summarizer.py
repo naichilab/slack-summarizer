@@ -48,10 +48,10 @@ client = WebClient(token=TOKEN)
 try:
     users_info = client.users_list()
     users = users_info['members']
+    print(users)
 except SlackApiError as e:
     print("Error : {}".format(e))
     exit(1)
-
 
 # チャンネルIDからチャンネル名に変換するために、チャンネル情報を取得する
 try:
@@ -175,8 +175,8 @@ for channel in channels:
 
 title = (f"{yesterday.strftime('%Y-%m-%d')}のpublic channelの要約")
 
-response = client.chat_postMessage(
-    channel=CHANNEL_ID,
-    text=title+"\n\n"+"\n\n".join(result_text)
-)
+# response = client.chat_postMessage(
+#     channel=CHANNEL_ID,
+#     text=title+"\n\n"+"\n\n".join(result_text)
+# )
 print("Message posted: ", response["ts"])
