@@ -59,6 +59,8 @@ try:
 
     users_dict = []
     for user in users:
+        if user["is_bot"]:
+            continue
         users_dict.append({"id": user['id'], "real_name": user["real_name"]})
     print(users_dict)
 
