@@ -58,7 +58,7 @@ try:
         print(f"users count = {len(users)}")
 
     users_dict = []
-    for user in users_info:
+    for user in users:
         users_dict.append({"id": user['id'], "real_name": user["real_name"]})
     print(users_dict)
 
