@@ -56,6 +56,12 @@ try:
         )
         users.extend(users_info['members'])
         print(f"users count = {len(users)}")
+
+    users_dict = []
+    for user in users_info:
+        users_dict.append({"id": user['id'], "real_name": user["real_name"]})
+    print(users_dict)
+
 except SlackApiError as e:
     print("Error : {}".format(e))
     exit(1)
