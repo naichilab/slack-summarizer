@@ -185,7 +185,10 @@ def load_messages(channel_id):
 
 
 result_text = []
-channels_dict = [{"id": "C014M35N3DH", "name": "times_technθ"}]
+channels_dict = [
+    {"id": "C014M35N3DH", "name": "times_technθ"},
+    {"id": "CE02R723B", "name": "_6_雑談"},
+]
 for channel in channels_dict:
     messages = load_messages(channel["id"])
     print(f"channel id={channel['id']} name={channel['name']} messages={len(messages)}")
