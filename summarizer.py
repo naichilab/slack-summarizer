@@ -95,8 +95,6 @@ try:
     channels_dict = []
     for channel in channels:
         channels_dict.append({"id": channel['id'], "name": channel["name"]})
-
-    print(channels_dict)
 except SlackApiError as e:
     print("Error : {}".format(e))
     exit(1)
@@ -127,7 +125,7 @@ def load_messages(channel_id):
         print("Error : {}".format(e))
         return None
 
-    messages = list(filter(lambda m: "subtype" not in m, all_messages["messages"]))
+    messages = list(filter(lambda m: "subtype" not in m, all_messages))
 
     if len(messages) < 1:
         return None
@@ -187,8 +185,8 @@ def load_messages(channel_id):
 
 
 result_text = []
-channels = [{"id": "C014M35N3DH", "name": "times_technθ"}]
-for channel in channels:
+channels_dict = [{"id": "C014M35N3DH", "name": "times_technθ"}]
+for channel in channels_dict:
     messages = load_messages(channel["id"])
     print(f"channel id={channel['id']} name={channel['name']} messages={len(messages)}")
     if messages != None:
