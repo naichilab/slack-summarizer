@@ -48,7 +48,14 @@ client = WebClient(token=TOKEN)
 try:
     users_info = client.users_list()
     users = users_info['members']
-    print(users)
+    print(f"users count = {len(users)}")
+
+    while users_info["has_more"]:
+        users_info = client.users_list(
+            cursor=users_info["response_metadata"]["next_cursor"]
+        )
+        users.extend(users_info['members'])
+        print(f"users count = {len(users)}")
 except SlackApiError as e:
     print("Error : {}".format(e))
     exit(1)
