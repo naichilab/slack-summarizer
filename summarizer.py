@@ -214,9 +214,10 @@ channels_dict = [
     {"id": "C023JAY72N7", "name": "times_くずかご"},
 ]
 for channel in channels_dict:
+    print(f"channel id={channel['id']} name={channel['name']}")
     messages = load_messages(channel["id"])
-    print(f"channel id={channel['id']} name={channel['name']} messages={len(messages)}")
     if messages != None:
+        print(f"messages={len(messages)}")
         text = summarize(messages)
         title = (f"{yesterday.strftime('%Y-%m-%d')} <#{channel['id']}>の要約")
 
