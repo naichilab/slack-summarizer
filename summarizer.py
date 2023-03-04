@@ -212,6 +212,7 @@ channels_dict = [
     {"id": "CE0L4GL66", "name": "times_ないち"},
     {"id": "C02QKBSQRBN", "name": "times_bunbun"},
     {"id": "C023JAY72N7", "name": "times_くずかご"},
+    {"id": "CE1BTU210", "name": "times_achamoth"},
 ]
 for channel in channels_dict:
     print(f"channel id={channel['id']} name={channel['name']}")
