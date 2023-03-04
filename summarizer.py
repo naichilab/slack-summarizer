@@ -210,6 +210,8 @@ channels_dict = [
     {"id": "CE02R723B", "name": "_6_雑談"},
     {"id": "C014M35N3DH", "name": "times_technθ"},
     {"id": "CE0L4GL66", "name": "times_ないち"},
+    {"id": "C02QKBSQRBN", "name": "times_bunbun"},
+    {"id": "C023JAY72N7", "name": "times_くずかご"},
 ]
 for channel in channels_dict:
     messages = load_messages(channel["id"])
